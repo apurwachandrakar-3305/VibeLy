@@ -1,0 +1,63 @@
+import React from "react";
+import { assets } from "../assets/assets";
+import { Star } from "lucide-react";
+import {SignIn}  from '@clerk/clerk-react'
+const Login = () => {
+  return (
+    <div className="min-h-screen flex flex-col md:flex-row">
+      {/* Background image */}
+      <img
+        src={assets.bgImage}
+        alt=""
+        className="absolute top-0 left-0 -z-10 w-full h-full object-cover"
+      />
+
+      {/* left side:Branding */}
+      <div className="flex-1 flex flex-col items-start justify-between p-6 md:p-10 lg:pl-40 pb-24 md:pb-32">
+        <img src={assets.logo} alt="" className="h-12 object-contain" />
+
+        <div>
+          <div className="flex items-center gap-3 mb-4 max-md:mt-10">
+            <img src={assets.group_users} alt="" className="h-8 md:h-10" />
+
+            <div>
+              <div className="flex">
+                {Array(5)
+                  .fill(0)
+                  .map((_, i) => (
+                    <Star
+                      key={i}
+                      className="size-4 text-transparent fill-amber-500"
+                    />
+                  ))}
+              </div>
+              {/* Slight text refinement */}
+              <p className="text-sm md:text-base text-gray-700">
+                Used by 12k+ developers
+              </p>
+            </div>
+          </div>
+
+          {/* Slight typography tweak */}
+          <h1 className="text-4xl md:text-6xl md:pb-2 font-extrabold leading-tight text-indigo-950">
+            More than just friends truly connect
+          </h1>
+
+          {/* Slight subtitle polish */}
+          <p className="text-lg md:text-2xl text-indigo-900 max-w-72 md:max-w-md">
+            connect with community on pingup
+          </p>
+        </div>
+
+        <span className="md:h-10"></span>
+      </div>
+
+      {/* Right side */}
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-10">
+      <SignIn></SignIn>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
