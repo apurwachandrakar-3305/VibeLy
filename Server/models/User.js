@@ -1,5 +1,5 @@
 import mongoose, { mongo } from "mongoose";
-import { type } from "./../node_modules/path-to-regexp/dist/index.d";
+
 const userSchema = new mongoose.Schema(
   {
     _id: {
