@@ -12,7 +12,7 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => res.send("server is running"));
+app.get("/", (req, res) => res.send(process.env.MONGODB_URL));
 
 // ✅ IMPORTANT
 app.use("/api/inngest", serve({ client: inngest, functions }));
