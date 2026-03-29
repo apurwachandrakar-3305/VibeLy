@@ -16,7 +16,7 @@ app.get("/", (req, res) => res.send("server is running"));
 
 // ✅ IMPORTANT
 app.use("/api/inngest", serve({ client: inngest, functions }));
-
+console.log("ENV:", process.env.MONGODB_URL);
 // ✅ THIS IS THE REAL FIX
 export default async function handler(req, res) {
   return app(req, res);
