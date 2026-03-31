@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => res.send("server is running"));
-
+app.use('/api/inngest',serve({client:inngest,functions}))
 export default async function handler(req, res) {
   try {
     return app(req, res);
