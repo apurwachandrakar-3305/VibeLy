@@ -10,7 +10,7 @@ const app = express();
 connectDB();
 
 // ✅ Inngest FIRST
-app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/inngest", serve({ client: inngest, functions }))
 
 // ✅ Then JSON
 app.use(express.json());
