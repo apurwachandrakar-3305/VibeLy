@@ -3,7 +3,7 @@ import connectDB from "../configs/db.js";
 import User from "../models/User.js";
 
 export const inngest = new Inngest({ id: "vibely-app" });
-
+console.log("🔥 FUNCTION STARTED");
 /* =========================
    ✅ CREATE USER
 ========================= */
@@ -17,6 +17,7 @@ const syncUserCreation = inngest.createFunction(
       console.log("STEP 1: Function started");
 
       await connectDB();
+      console.log("🔥 FUNCTION STARTED");
       console.log("STEP 2: DB connected");
 
       const data = event.data;
