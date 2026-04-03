@@ -13,31 +13,53 @@ const syncUserCreation = inngest.createFunction(
     triggers: { event: "clerk/user.created" },
   },
   async ({ event }) => {
-    await connectDB(); // 🔥 IMPORTANT
+    try {
+      console.log("STEP 1: Function started");
 
-    const { id, first_name, last_name, email_addresses, image_url } =
-      event.data;
+      await connectDB();
+      console.log("STEP 2: DB connected");
 
-    // Prevent duplicate
-    const existing = await User.findById(id);
-    if (existing) return;
+      const data = event.data;
 
-    let username = email_addresses[0].email_address.split("@")[0];
+      if (!data) throw new Error("No event data");
 
-    const check = await User.findOne({ username });
-    if (check) {
-      username = username + Math.floor(Math.random() * 1000);
+      const id = data.id;
+      const email = data.email_addresses?.[0]?.email_address;
+
+      if (!email) throw new Error("Email not found");
+
+      console.log("STEP 3: Data extracted");
+
+      // Prevent duplicate
+      const existing = await User.findById(id);
+      if (existing) {
+        console.log("User already exists");
+        return { success: true };
+      }
+
+      let username = email.split("@")[0];
+
+      const check = await User.findOne({ username });
+      if (check) {
+        username = username + Math.floor(Math.random() * 1000);
+      }
+
+      await User.create({
+        _id: id,
+        email,
+        full_name: `${data.first_name || ""} ${data.last_name || ""}`,
+        profile_picture: data.image_url,
+        username,
+      });
+
+      console.log("STEP 4: User created");
+
+      return { success: true };
+
+    } catch (error) {
+      console.log("ERROR (CREATE):", error.message);
+      throw error;
     }
-
-    await User.create({
-      _id: id, // using Clerk ID as Mongo _id
-      email: email_addresses[0].email_address,
-      full_name: `${first_name} ${last_name}`,
-      profile_picture: image_url,
-      username,
-    });
-
-    return { success: true };
   }
 );
 
@@ -50,18 +72,25 @@ const syncUserUpdation = inngest.createFunction(
     triggers: { event: "clerk/user.updated" },
   },
   async ({ event }) => {
-    await connectDB(); // 🔥 IMPORTANT
+    try {
+      await connectDB();
 
-    const { id, first_name, last_name, email_addresses, image_url } =
-      event.data;
+      const data = event.data;
 
-    await User.findByIdAndUpdate(id, {
-      email: email_addresses[0].email_address,
-      full_name: `${first_name} ${last_name}`,
-      profile_picture: image_url,
-    });
+      await User.findByIdAndUpdate(data.id, {
+        email: data.email_addresses?.[0]?.email_address,
+        full_name: `${data.first_name || ""} ${data.last_name || ""}`,
+        profile_picture: data.image_url,
+      });
 
-    return { success: true };
+      console.log("User updated");
+
+      return { success: true };
+
+    } catch (error) {
+      console.log("ERROR (UPDATE):", error.message);
+      throw error;
+    }
   }
 );
 
@@ -74,13 +103,21 @@ const syncUserDeletion = inngest.createFunction(
     triggers: { event: "clerk/user.deleted" },
   },
   async ({ event }) => {
-    await connectDB(); // 🔥 IMPORTANT
+    try {
+      await connectDB();
 
-    const { id } = event.data;
+      const id = event.data.id;
 
-    await User.findByIdAndDelete(id);
+      await User.findByIdAndDelete(id);
 
-    return { success: true };
+      console.log("User deleted");
+
+      return { success: true };
+
+    } catch (error) {
+      console.log("ERROR (DELETE):", error.message);
+      throw error;
+    }
   }
 );
 
