@@ -1,7 +1,12 @@
-import ImageKit from "imagekit"
-var imagekit = new ImageKit({
-    publicKey:process.env.IMAGEKIT_PUBLIC_KEY,
-    privateKey:process.env.IMAGEKIT_PRIVATE_KEY,
-    urlEndpoint:process.env.IMAGEKIT_URL_ENDPOINT
-})
-export default imagekit
+import dotenv from "dotenv";
+dotenv.config();
+
+import ImageKit from "imagekit";
+console.log("Inside ImageKit:", process.env.IMAGEKIT_PUBLIC_KEY);
+const imagekit = new ImageKit({
+  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
+  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT,
+});
+
+export default imagekit;
