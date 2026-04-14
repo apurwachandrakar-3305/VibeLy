@@ -19,15 +19,15 @@ export const getUserData = async (req, res) => {
 //update userdata
 export const updateUserData = async (req, res) => {
   try {
-    const userId = req.auth();
+    const {userId} = req.auth();
     const { username, bio, location, full_name } = req.body;
-    const tempUser = User.findById(userId);
+    const tempUser = await User.findById(userId);
     if (!tempUser) {
       return res.json({ success: false, message: "User not found" });
     }
     !username && (username = tempUser.username);
     if (tempUser.username !== username) {
-      const user = User.findOne({ username });
+      const user = await User.findOne({ username });
       if (user) {
         // we will not chnage beacuse it is already taken
         username = tempUser.username;
@@ -105,7 +105,7 @@ export const discoverUsers = async (req, res) => {
 // follow users
 export const followUsers = async (req, res) => {
   try {
-    const userId = req.auth();
+    const {userId}= req.auth();
     const { id } = req.body;
     const user = await User.findById(userId);
     if (user.following.includes(id)) {
@@ -128,7 +128,7 @@ export const followUsers = async (req, res) => {
 // unfollow the user
 export const unfollowUser = async (req, res) => {
   try {
-    const userId = req.auth();
+    const {userId} = req.auth();
     const { id } = req.body;
     const user = await User.findById(userId);
     user.following = user.following.filter((user) => user !== id);
